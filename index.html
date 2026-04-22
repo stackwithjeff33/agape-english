@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agape English Course - Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Print styles */
+        @media print {
+            body, main { overflow: visible !important; height: auto !important; background-color: white; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            #main-content { margin-left: 0 !important; width: 100% !important; padding: 0 !important; }
+            .shadow-md { box-shadow: none !important; border: 1px solid #e5e7eb; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex h-screen overflow-hidden">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 right-5 transform translate-x-full transition-transform duration-300 z-50 flex items-center p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+        <div id="toast-icon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg">
+            <i class="fas fa-check"></i>
+        </div>
+        <div id="toast-message" class="ml-3 text-sm font-normal">Message here.</div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-indigo-900 text-white flex flex-col h-full no-print shadow-xl z-20 hidden md:flex absolute md:relative">
+        <div class="p-6 flex items-center justify-center border-b border-indigo-800">
+            <i class="fas fa-book-open text-3xl text-indigo-300 mr-3"></i>
+            <div>
+                <h1 class="text-xl font-bold tracking-wider text-white">AGAPE</h1>
+                <p class="text-xs text-indigo-300 uppercase tracking-widest">English Course</p>
+            </div>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <button onclick="navigate('dashboard')" id="nav-dashboard" class="w-full flex items-center px-4 py-3 bg-indigo-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-home w-6"></i> Dashboard
+            </button>
+            <button onclick="navigate('students')" id="nav-students" class="w-full flex items-center px-4 py-3 hover:bg-indigo-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-user-graduate w-6"></i> Students Data
+            </button>
+            <button onclick="navigate('sessions')" id="nav-sessions" class="w-full flex items-center px-4 py-3 hover:bg-indigo-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-chalkboard-teacher w-6"></i> Learning Journal
+            </button>
+            <button onclick="navigate('reports')" id="nav-reports" class="w-full flex items-center px-4 py-3 hover:bg-indigo-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-file-invoice w-6"></i> Parent Reports
+            </button>
+            <button onclick="navigate('settings')" id="nav-settings" class="w-full flex items-center px-4 py-3 hover:bg-indigo-800 rounded-lg text-left transition-colors">
+                <i class="fas fa-cog w-6"></i> Settings
+            </button>
+        </nav>
+        <div class="p-4 border-t border-indigo-800 text-center text-xs text-indigo-400">
+            &copy; 2026 Agape System
+        </div>
+    </aside>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 w-full bg-indigo-900 text-white p-4 flex justify-between items-center z-30 no-print">
+        <div class="flex items-center">
+            <i class="fas fa-book-open text-xl text-indigo-300 mr-2"></i>
+            <h1 class="font-bold">Agape English</h1>
+        </div>
+        <button onclick="toggleMobileMenu()" class="text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-indigo-900 bg-opacity-95 z-40 hidden flex-col pt-20 px-6 no-print transition-opacity">
+        <button onclick="toggleMobileMenu()" class="absolute top-5 right-5 text-white text-3xl">&times;</button>
+        <button onclick="navigate('dashboard'); toggleMobileMenu()" class="w-full flex items-center px-4 py-4 text-lg text-white border-b border-indigo-800">
+            <i class="fas fa-home w-8 text-indigo-300"></i> Dashboard
+        </button>
+        <button onclick="navigate('students'); toggleMobileMenu()" class="w-full flex items-center px-4 py-4 text-lg text-white border-b border-indigo-800">
+            <i class="fas fa-user-graduate w-8 text-indigo-300"></i> Students Data
+        </button>
+        <button onclick="navigate('sessions'); toggleMobileMenu()" class="w-full flex items-center px-4 py-4 text-lg text-white border-b border-indigo-800">
+            <i class="fas fa-chalkboard-teacher w-8 text-indigo-300"></i> Learning Journal
+        </button>
+        <button onclick="navigate('reports'); toggleMobileMenu()" class="w-full flex items-center px-4 py-4 text-lg text-white border-b border-indigo-800">
+            <i class="fas fa-file-invoice w-8 text-indigo-300"></i> Parent Reports
+        </button>
+        <button onclick="navigate('settings'); toggleMobileMenu()" class="w-full flex items-center px-4 py-4 text-lg text-white">
+            <i class="fas fa-cog w-8 text-indigo-300"></i> Settings
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 flex flex-col h-full relative overflow-y-auto w-full pt-16 md:pt-0">
+        
+        <!-- View: Dashboard -->
+        <section id="view-dashboard" class="p-6 md:p-10 w-full max-w-6xl mx-auto">
+            <div class="mb-8 flex justify-between items-end">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-1">Welcome, Teacher!</h2>
+                    <p class="text-gray-500">Summary of Agape English Course activities today.</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center">
+                    <div class="p-4 rounded-full bg-blue-100 text-blue-600 mr-4">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Active Students</p>
+                        <p id="stat-students" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center">
+                    <div class="p-4 rounded-full bg-green-100 text-green-600 mr-4">
+                        <i class="fas fa-book text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Total Sessions</p>
+                        <p id="stat-sessions" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center">
+                    <div class="p-4 rounded-full bg-purple-100 text-purple-600 mr-4">
+                        <i class="fas fa-star text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">Average Score</p>
+                        <p id="stat-avg" class="text-3xl font-bold text-gray-800">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-semibold text-gray-800">Recent Learning Journals</h3>
+                    <button onclick="navigate('sessions')" class="text-sm text-indigo-600 hover:text-indigo-800">View All</button>
+                </div>
+                <div class="p-0 overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-gray-500">
+                            <tr>
+                                <th class="px-6 py-3 font-medium">Date</th>
+                                <th class="px-6 py-3 font-medium">Student</th>
+                                <th class="px-6 py-3 font-medium">Topics Covered</th>
+                                <th class="px-6 py-3 font-medium">Avg Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-recent-table" class="divide-y divide-gray-100">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Students -->
+        <section id="view-students" class="p-6 md:p-10 hidden w-full max-w-6xl mx-auto">
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-1">Students Data</h2>
+                    <p class="text-gray-500">Manage the list of students enrolled in the course.</p>
+                </div>
+                <button onclick="openModal('modal-student')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg shadow-sm transition-colors flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Add Student
+                </button>
+            </div>
+
+            <!-- Advanced Filters (Students) -->
+            <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <label class="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Search Students By Category</label>
+                <div class="flex flex-col md:flex-row gap-0">
+                    <select id="filter-student-col" onchange="renderStudents()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-t-lg md:rounded-l-lg md:rounded-tr-none focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 w-full md:w-48 outline-none">
+                        <option value="name">Full Name</option>
+                        <option value="age">Age</option>
+                        <option value="level">Education Level</option>
+                        <option value="parent">Guardian Name</option>
+                    </select>
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400"><i class="fas fa-search"></i></div>
+                        <input type="text" id="filter-student-search" oninput="renderStudents()" placeholder="Type to search..." class="bg-gray-50 border border-gray-300 border-t-0 md:border-t md:border-l-0 text-gray-900 text-sm rounded-b-lg md:rounded-r-lg md:rounded-bl-none focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 p-2.5 outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-gray-600 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 font-semibold">Full Name</th>
+                                <th class="px-6 py-4 font-semibold">Age</th>
+                                <th class="px-6 py-4 font-semibold">Education Level</th>
+                                <th class="px-6 py-4 font-semibold">Guardian Contact</th>
+                                <th class="px-6 py-4 font-semibold text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table" class="divide-y divide-gray-100 text-gray-700">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="students-empty" class="hidden p-10 text-center text-gray-500">
+                    <i class="fas fa-user-slash text-4xl mb-3 text-gray-300"></i>
+                    <p>No student data available. Please add a new student.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Sessions (Jurnal) -->
+        <section id="view-sessions" class="p-6 md:p-10 hidden w-full max-w-6xl mx-auto">
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-1">Learning Journal</h2>
+                    <p class="text-gray-500">Record progress and materials for each meeting.</p>
+                </div>
+                <button onclick="openModal('modal-session')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg shadow-sm transition-colors flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Add Journal Entry
+                </button>
+            </div>
+
+            <!-- Advanced Filters (Sessions) -->
+            <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <label class="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Search Records By Category</label>
+                <div class="flex flex-col md:flex-row gap-0">
+                    <select id="filter-session-col" onchange="renderSessions()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-t-lg md:rounded-l-lg md:rounded-tr-none focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 w-full md:w-48 outline-none">
+                        <option value="student">Student Name</option>
+                        <option value="date">Date (YYYY-MM-DD)</option>
+                        <option value="status">Status (Online/Offline)</option>
+                        <option value="topic">Topic Title</option>
+                    </select>
+                    <div class="relative flex-1">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400"><i class="fas fa-search"></i></div>
+                        <input type="text" id="filter-session-search" oninput="renderSessions()" placeholder="Type to search..." class="bg-gray-50 border border-gray-300 border-t-0 md:border-t md:border-l-0 text-gray-900 text-sm rounded-b-lg md:rounded-r-lg md:rounded-bl-none focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 p-2.5 outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-gray-600 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 font-semibold">Date & Time</th>
+                                <th class="px-6 py-4 font-semibold">Student</th>
+                                <th class="px-6 py-4 font-semibold">Status</th>
+                                <th class="px-6 py-4 font-semibold">Topics</th>
+                                <th class="px-6 py-4 font-semibold">Avg Score</th>
+                                <th class="px-6 py-4 font-semibold text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessions-table" class="divide-y divide-gray-100 text-gray-700">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="sessions-empty" class="hidden p-10 text-center text-gray-500">
+                    <i class="fas fa-clipboard-list text-4xl mb-3 text-gray-300"></i>
+                    <p>No learning records found.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Reports -->
+        <section id="view-reports" class="p-6 md:p-10 hidden w-full max-w-4xl mx-auto">
+            <div class="mb-8 no-print">
+                <h2 class="text-3xl font-bold text-gray-800 mb-1">Learning Progress Report</h2>
+                <p class="text-gray-500">Select a student to view and print their report for parents.</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 no-print">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Select Student & Period</label>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <select id="report-student-select" class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                        <option value="">-- Select Student --</option>
+                    </select>
+                    <input type="month" id="report-month-select" class="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required>
+                    <button onclick="generateReport()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg shadow-sm transition-colors whitespace-nowrap">
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Printable Report Container -->
+            <div id="report-container" class="hidden bg-white rounded-xl shadow-md p-8 md:p-12 border border-gray-200 print:shadow-none print:border-none print:p-0">
+                
+                <!-- Report Header -->
+                <div class="border-b-2 border-indigo-900 pb-6 mb-8 flex flex-col md:flex-row print:flex-row justify-between items-center gap-4">
+                    <div class="text-center md:text-left print:text-left flex flex-col md:flex-row print:flex-row items-center gap-4">
+                        <img id="report-course-logo" src="" class="hidden w-16 h-16 object-contain">
+                        <div>
+                            <h1 id="report-course-name" class="text-2xl font-bold text-indigo-900 tracking-wider">AGAPE ENGLISH COURSE</h1>
+                            <p id="report-course-address" class="text-sm text-gray-600">Jl. Pendidikan No. 123, Smart City</p>
+                            <p id="report-course-phone" class="text-sm text-gray-600">Phone: 0812-3456-7890</p>
+                        </div>
+                    </div>
+                    <div class="text-center md:text-right print:text-right mt-2 md:mt-0 print:mt-0">
+                        <h2 class="text-xl font-bold text-gray-800 uppercase">Progress Report</h2>
+                        <p class="text-sm text-gray-500">Print Date: <span id="report-print-date"></span></p>
+                    </div>
+                </div>
+
+                <!-- Student Info -->
+                <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
+                    <div>
+                        <p><span class="font-semibold w-28 inline-block text-gray-600">Student Name</span> : <span id="report-name" class="font-medium text-gray-900"></span></p>
+                        <p><span class="font-semibold w-28 inline-block text-gray-600">Age</span> : <span id="report-age" class="text-gray-900"></span> Years</p>
+                    </div>
+                    <div>
+                        <p><span class="font-semibold w-28 inline-block text-gray-600">Education Level</span> : <span id="report-level" class="text-gray-900"></span></p>
+                        <p><span class="font-semibold w-28 inline-block text-gray-600">Guardian Name</span> : <span id="report-parent" class="text-gray-900"></span></p>
+                    </div>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="bg-indigo-50 rounded-lg p-4 mb-8 flex justify-around text-center">
+                    <div>
+                        <p class="text-xs text-indigo-600 font-semibold uppercase tracking-wider mb-1">Total Meetings</p>
+                        <p class="text-2xl font-bold text-indigo-900" id="report-total-sessions">0</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-indigo-600 font-semibold uppercase tracking-wider mb-1">Average Score</p>
+                        <p class="text-2xl font-bold text-indigo-900" id="report-avg-score">0</p>
+                    </div>
+                </div>
+
+                <!-- Sessions List -->
+                <div class="mb-8">
+                    <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Learning Details</h3>
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="border border-gray-200 px-4 py-2 font-semibold w-1/4">Date & Status</th>
+                                <th class="border border-gray-200 px-4 py-2 font-semibold">Material Covered & Evidence</th>
+                                <th class="border border-gray-200 px-4 py-2 font-semibold text-center w-20">Avg. Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="report-table-body">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Signatures -->
+                <div class="mt-16 flex justify-between px-10 text-center text-sm">
+                    <div>
+                        <p class="mb-16 text-gray-600">Acknowledged by Guardian</p>
+                        <p class="border-t border-gray-400 w-48 pt-2 font-medium mx-auto" id="report-parent-sign"></p>
+                    </div>
+                    <div>
+                        <p class="mb-16 text-gray-600">Agape Instructor</p>
+                        <p id="report-teacher-name" class="border-t border-gray-400 w-48 pt-2 font-medium mx-auto">Teacher / Tutor</p>
+                    </div>
+                </div>
+
+                <div class="mt-10 text-center no-print">
+                    <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg shadow-md transition-colors font-medium text-lg flex items-center justify-center mx-auto">
+                        <i class="fas fa-print mr-2"></i> Print Document / Save as PDF
+                    </button>
+                </div>
+            </div>
+            
+            <div id="report-empty-state" class="hidden text-center p-10 text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100">
+                <i class="fas fa-folder-open text-4xl mb-3 text-gray-300"></i>
+                <p>No learning records available for this student.</p>
+            </div>
+        </section>
+
+        <!-- View: Settings -->
+        <section id="view-settings" class="p-6 md:p-10 hidden w-full max-w-4xl mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-1">Course Settings</h2>
+                <p class="text-gray-500">Configure your course information here. This will be reflected in the reports.</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <form id="form-settings" onsubmit="handleSettingsSubmit(event)">
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Course Logo</label>
+                            <div class="flex items-center gap-4">
+                                <div class="w-16 h-16 rounded border border-gray-300 flex items-center justify-center bg-gray-50 overflow-hidden shrink-0">
+                                    <img id="setting-logo-preview" src="" class="hidden max-w-full max-h-full object-contain">
+                                    <i id="setting-logo-icon" class="fas fa-image text-gray-400 text-2xl"></i>
+                                </div>
+                                <label class="cursor-pointer bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded shadow-sm hover:bg-gray-50 text-sm font-medium transition-colors">
+                                    Change Logo
+                                    <input type="file" id="setting-logo-input" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+                                </label>
+                                <button type="button" onclick="removeLogo()" class="text-red-500 hover:text-red-700 text-sm font-medium">Remove</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Course Name</label>
+                            <input type="text" id="setting-name" oninput="this.value = this.value.toUpperCase()" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Course Address</label>
+                            <textarea id="setting-address" rows="3" oninput="this.value = this.value.toUpperCase()" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                                <input type="text" id="setting-phone" oninput="formatPhone(this)" placeholder="+62-8xx-xxxx-xxxx" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Teacher / Instructor Name</label>
+                                <input type="text" id="setting-teacher" oninput="formatTitleCase(this)" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-5 border-t border-gray-100 flex justify-end">
+                        <button type="submit" id="btn-save-settings" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg shadow-sm transition-colors font-medium">
+                            <i class="fas fa-save mr-2"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal: Add Student -->
+    <div id="modal-student" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800" id="student-modal-title">Add New Student</h3>
+                <button onclick="closeModal('modal-student')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="form-student" onsubmit="handleStudentSubmit(event)" class="p-6">
+                <input type="hidden" id="student-id">
+                <div class="space-y-4 max-h-[60vh] overflow-y-auto px-1 -mx-1">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="student-name" oninput="formatTitleCase(this)" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="e.g. Budi Santoso">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                            <input type="date" id="student-dob" onchange="calculateAge(this.value)" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Age (Auto)</label>
+                            <input type="number" id="student-age" readonly class="bg-gray-200 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 cursor-not-allowed">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Education Level</label>
+                        <select id="student-level" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                            <option value="Pre-School">Pre-School</option>
+                            <option value="TK">Kindergarten (TK)</option>
+                            <option value="SD">Primary (SD)</option>
+                            <option value="SMP">Junior High (SMP)</option>
+                            <option value="SMA">Senior High (SMA)</option>
+                            <option value="Mahasiswa/i">University Student</option>
+                            <option value="Umum">General/Public</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Guardian Name</label>
+                        <input type="text" id="student-parent" oninput="formatTitleCase(this)" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="e.g. Hari Wijayanto">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">WhatsApp Number (Guardian)</label>
+                        <input type="text" id="student-phone" oninput="formatPhone(this)" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="+62-8xx-xxxx-xxxx">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Home Address</label>
+                        <textarea id="student-address" rows="2" oninput="this.value = this.value.toUpperCase()" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="e.g. JL. MANGGA NO 5"></textarea>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Course Schedule</label>
+                            <button type="button" onclick="addScheduleRow()" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                                <i class="fas fa-plus-circle mr-1"></i> Add
+                            </button>
+                        </div>
+                        <div id="schedule-container" class="space-y-2">
+                            <!-- Dynamic Schedules Here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end gap-3 border-t pt-4">
+                    <button type="button" onclick="closeModal('modal-student')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none">Save Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add Session -->
+    <div id="modal-session" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden transform transition-all">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-800" id="session-modal-title">Record Learning Journal</h3>
+                <button onclick="closeModal('modal-session')" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="form-session" onsubmit="handleSessionSubmit(event)" class="p-6">
+                <input type="hidden" id="session-id">
+                <div class="space-y-6 max-h-[70vh] overflow-y-auto px-2 -mx-2">
+                    
+                    <!-- Basic Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Student Name</label>
+                            <select id="session-student" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                                <!-- Dynamic -->
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="session-status" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                                <option value="Offline">Offline</option>
+                                <option value="Online">Online</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                            <input type="date" id="session-date" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                        </div>
+                        <div class="flex gap-2">
+                            <div class="w-1/2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+                                <input type="time" id="session-start" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                            </div>
+                            <div class="w-1/2">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                                <input type="time" id="session-end" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material & Evaluation -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200">
+                            <h4 class="font-semibold text-gray-800">Material & Evaluation</h4>
+                            <button type="button" onclick="addTopicRow()" class="text-sm bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-md hover:bg-indigo-100 font-medium">
+                                <i class="fas fa-plus mr-1"></i> Add Topic
+                            </button>
+                        </div>
+                        <div id="topics-container" class="space-y-4">
+                            <!-- Dynamic Topics Here -->
+                        </div>
+                    </div>
+
+                    <!-- Homework (Optional) -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200">
+                            <h4 class="font-semibold text-gray-800">Homework & Deadline <span class="text-gray-400 font-normal text-sm">(Optional)</span></h4>
+                            <button type="button" onclick="addHomeworkRow()" class="text-sm bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-md hover:bg-indigo-100 font-medium">
+                                <i class="fas fa-plus mr-1"></i> Add Homework
+                            </button>
+                        </div>
+                        <div id="homework-container" class="space-y-3">
+                            <!-- Dynamic Homework Here -->
+                        </div>
+                    </div>
+
+                    <!-- Special Notes -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Special Notes <span class="text-gray-400 font-normal">(Optional)</span></label>
+                        <textarea id="session-notes" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Evaluate behavior, shortcomings, or specific progress here..."></textarea>
+                    </div>
+
+                </div>
+                <div class="mt-6 flex justify-end gap-3 border-t pt-4">
+                    <button type="button" onclick="closeModal('modal-session')" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none">Cancel</button>
+                    <button type="submit" id="btn-save-session" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none">Save Journal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Logic for Firebase Database & Google Apps Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Deteksi apakah sedang diuji coba di editor cerdas ini
+        const isPreview = typeof __firebase_config !== 'undefined';
+
+        // =========================================================================
+        // ====== SETTING HOSTINGER / FIREBASE ANDA ======
+        const myFirebaseConfig = {
+            apiKey: "AIzaSyBvt9GmmR0671NLDh03zoJypnbsFjNIHZE",
+            authDomain: "agape-english.firebaseapp.com",
+            projectId: "agape-english",
+            storageBucket: "agape-english.firebasestorage.app",
+            messagingSenderId: "721654799094",
+            appId: "1:721654799094:web:c0787764602dd2ac496ad7",
+            measurementId: "G-Z2XR8QBFTW"
+        };
+        
+        // ====== SETTING GOOGLE APPS SCRIPT URL ======
+        // Masukkan URL Google Apps Script yang Anda dapatkan di Langkah 3 di sini:
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxniq-StIH08SrI6VGZUVnNtaJOplzAJtDP5Q2x258RiLy_ZTgvEGaN1N-F8qeS2CCQ/exec";
+        // =========================================================================
+
+        const firebaseConfig = isPreview ? JSON.parse(__firebase_config) : myFirebaseConfig;
+        
+        let db, auth;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch(e) {
+            console.error("Menunggu konfigurasi Firebase Anda...", e);
+        }
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'agape-course';
+        let currentUser = null;
+
+        // State Management Lokal UI
+        let students = [];
+        let sessions = [];
+        let courseInfo = { name: "AGAPE ENGLISH COURSE", address: "", phone: "", teacher: "", logo: "" };
+
+        // Helper Referensi Database (Menyesuaikan dengan Lingkungan)
+        const getColRef = (colName) => {
+            if (isPreview && currentUser) return collection(db, 'artifacts', appId, 'users', currentUser.uid, colName);
+            return collection(db, colName); // Ini dipakai di Netlify/Hostinger Anda
+        };
+        const getDocRef = (colName, docId) => {
+            if (isPreview && currentUser) return doc(db, 'artifacts', appId, 'users', currentUser.uid, colName, docId);
+            return doc(db, colName, docId); // Ini dipakai di Netlify/Hostinger Anda
+        };
+
+        // UI Helpers
+        const toggleMobileMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('flex');
+        };
+
+        const showToast = (message, isSuccess = true) => {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            const iconEl = document.getElementById('toast-icon');
+            msgEl.textContent = message;
+            if (isSuccess) {
+                iconEl.className = 'inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg';
+                iconEl.innerHTML = '<i class="fas fa-check"></i>';
+            } else {
+                iconEl.className = 'inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg';
+                iconEl.innerHTML = '<i class="fas fa-exclamation"></i>';
+            }
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => toast.classList.add('translate-x-full'), 3000);
+        };
+
+        const openModal = (id) => {
+            document.getElementById(id).classList.remove('hidden');
+            if(id === 'modal-session') {
+                document.getElementById('form-session').reset();
+                document.getElementById('session-id').value = '';
+                document.getElementById('session-date').valueAsDate = new Date();
+                document.getElementById('topics-container').innerHTML = '';
+                document.getElementById('homework-container').innerHTML = '';
+                addTopicRow(); 
+                populateStudentSelects();
+                document.getElementById('session-modal-title').textContent = 'Record Learning Journal';
+            } else if (id === 'modal-student') {
+                document.getElementById('form-student').reset();
+                document.getElementById('student-id').value = '';
+                document.getElementById('student-age').value = '';
+                document.getElementById('schedule-container').innerHTML = '';
+                addScheduleRow(); 
+                document.getElementById('student-modal-title').textContent = 'Add New Student';
+            }
+        };
+
+        const closeModal = (id) => document.getElementById(id).classList.add('hidden');
+
+        // Navigation
+        const navigate = (view) => {
+            ['dashboard', 'students', 'sessions', 'reports', 'settings'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                document.getElementById(`nav-${v}`).className = "w-full flex items-center px-4 py-3 hover:bg-indigo-800 rounded-lg text-left transition-colors";
+            });
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            document.getElementById(`nav-${view}`).className = "w-full flex items-center px-4 py-3 bg-indigo-800 rounded-lg text-left transition-colors font-medium";
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'students') renderStudents();
+            if (view === 'sessions') renderSessions();
+            if (view === 'settings') renderSettings();
+            if (view === 'reports') {
+                populateStudentSelects();
+                const now = new Date();
+                document.getElementById('report-month-select').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+                document.getElementById('report-container').classList.add('hidden');
+                document.getElementById('report-empty-state').classList.add('hidden');
+            }
+        };
+
+        // Format Date Helper
+        const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+        const formatTitleCase = (input) => {
+            const words = input.value.split(' ');
+            input.value = words.map(word => word.length === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+        };
+
+        const calculateAge = (dobString) => {
+            if (!dobString) return;
+            const dob = new Date(dobString);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+            document.getElementById('student-age').value = age >= 0 ? age : 0;
+        };
+
+        const formatPhone = (input) => {
+            let val = input.value.replace(/[^\d]/g, '');
+            if (val.startsWith('0')) val = '62' + val.substring(1);
+            if (!val) { input.value = ''; return; }
+            let formatted = '+';
+            if (val.length > 0) formatted += val.substring(0, 2);
+            if (val.length > 2) formatted += '-' + val.substring(2, 5);
+            if (val.length > 5) formatted += '-' + val.substring(5, 9);
+            if (val.length > 9) formatted += '-' + val.substring(9, 13);
+            input.value = formatted;
+        };
+
+        // Dapatkan Image URL Langsung dari Google Drive
+        const getDriveImageUrl = (url) => {
+            if (!url) return '';
+            if (url.startsWith('data:')) return url;
+            
+            let id = '';
+            const matchD = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            const matchId = url.match(/id=([a-zA-Z0-9_-]+)/);
+            
+            if (matchD && matchD[1]) id = matchD[1];
+            else if (matchId && matchId[1]) id = matchId[1];
+
+            if (id) {
+                // Menggunakan Google Drive Thumbnail API agar tidak terblokir oleh aturan Third-Party Cookie browser modern
+                return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
+            }
+            return url;
+        };
+
+        const handleLogoUpload = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const imgEl = document.getElementById('setting-logo-preview');
+                    imgEl.src = event.target.result;
+                    imgEl.dataset.originalUrl = event.target.result; // Simpan data url aslinya
+                    imgEl.classList.remove('hidden');
+                    document.getElementById('setting-logo-icon').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        const removeLogo = () => {
+            document.getElementById('setting-logo-input').value = "";
+            document.getElementById('setting-logo-preview').src = "";
+            document.getElementById('setting-logo-preview').dataset.originalUrl = "";
+            document.getElementById('setting-logo-preview').classList.add('hidden');
+            document.getElementById('setting-logo-icon').classList.remove('hidden');
+        };
+
+        const addScheduleRow = (day = '', time = '') => {
+            const container = document.getElementById('schedule-container');
+            const row = document.createElement('div');
+            row.className = 'schedule-row flex gap-2 items-center';
+            row.innerHTML = `
+                <select class="schedule-day flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2.5" required>
+                    <option value="" disabled ${!day ? 'selected' : ''}>Day</option>
+                    <option value="Monday" ${day === 'Monday' ? 'selected' : ''}>Monday</option>
+                    <option value="Tuesday" ${day === 'Tuesday' ? 'selected' : ''}>Tuesday</option>
+                    <option value="Wednesday" ${day === 'Wednesday' ? 'selected' : ''}>Wednesday</option>
+                    <option value="Thursday" ${day === 'Thursday' ? 'selected' : ''}>Thursday</option>
+                    <option value="Friday" ${day === 'Friday' ? 'selected' : ''}>Friday</option>
+                    <option value="Saturday" ${day === 'Saturday' ? 'selected' : ''}>Saturday</option>
+                    <option value="Sunday" ${day === 'Sunday' ? 'selected' : ''}>Sunday</option>
+                </select>
+                <input type="time" class="schedule-time flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2.5" value="${time}" required>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700 p-2"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(row);
+        };
+
+        const handleTopicFilesUpload = (input) => {
+            const container = input.closest('.flex-col').querySelector('.topic-file-list');
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const dataUrl = e.target.result;
+                    const chip = document.createElement('div');
+                    const isPdf = file.name.toLowerCase().endsWith('.pdf');
+                    chip.className = 'flex items-center gap-2 bg-indigo-50 px-2 py-1.5 rounded border border-indigo-100 text-xs shadow-sm max-w-full';
+                    chip.innerHTML = `
+                        <i class="${isPdf ? 'fas fa-file-pdf text-red-500' : 'fas fa-image text-blue-500'} shrink-0"></i>
+                        <a href="${dataUrl}" download="${file.name}" target="_blank" class="text-indigo-700 hover:underline truncate max-w-[120px] block" title="${file.name}">${file.name}</a>
+                        <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 shrink-0 ml-1"><i class="fas fa-times"></i></button>
+                    `;
+                    container.appendChild(chip);
+                };
+                reader.readAsDataURL(file);
+            });
+            input.value = ''; // Reset input
+        };
+
+        const updateHomeworkFileName = (input) => {
+            const container = input.parentElement;
+            const label = container.querySelector('.file-label-text');
+            const iconDefault = container.querySelector('.icon-default');
+            const iconApproved = container.querySelector('.icon-approved');
+
+            if(input.files && input.files.length > 0) {
+                label.textContent = input.files.length > 1 ? `Approved (+${input.files.length})` : 'Approved';
+                label.classList.add('text-green-600', 'font-medium');
+                container.classList.add('bg-green-50', 'border-green-300');
+                iconDefault.classList.add('hidden');
+                iconApproved.classList.remove('hidden');
+            } else {
+                label.textContent = input.getAttribute('data-default');
+                label.classList.remove('text-green-600', 'font-medium');
+                container.classList.remove('bg-green-50', 'border-green-300');
+                iconDefault.classList.remove('hidden');
+                iconApproved.classList.add('hidden');
+            }
+        };
+
+        const addTopicRow = (topicData = null) => {
+            const container = document.getElementById('topics-container');
+            const row = document.createElement('div');
+            row.className = 'topic-row bg-white border border-gray-200 rounded-lg p-4 relative';
+            row.innerHTML = `
+                <button type="button" onclick="this.parentElement.remove()" class="absolute top-3 right-3 text-red-400 hover:text-red-600"><i class="fas fa-trash-alt"></i></button>
+                <div class="mb-3">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Topic Title</label>
+                    <input type="text" class="topic-title w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2" oninput="formatTitleCase(this)" placeholder="e.g. Present Tense" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-xs font-medium text-gray-700 mb-2">Skill / Component Focus</label>
+                    <div class="grid grid-cols-3 gap-2 text-sm">
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Speaking" class="topic-skill rounded text-indigo-600 focus:ring-indigo-500"> <span>Speaking</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Listening" class="topic-skill rounded text-indigo-600 focus:ring-indigo-500"> <span>Listening</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Grammar" class="topic-skill rounded text-indigo-600 focus:ring-indigo-500"> <span>Grammar</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Reading" class="topic-skill rounded text-indigo-600 focus:ring-indigo-500"> <span>Reading</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Writing" class="topic-skill rounded text-indigo-600 focus:ring-indigo-500"> <span>Writing</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" value="Vocabulary" class="topic-skill rounded text-indigo-600 focus:ring-indigo-500"> <span>Vocabulary</span></label>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex gap-4 items-start">
+                        <div class="w-1/3">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Progress Score (0-100)</label>
+                            <input type="number" class="topic-score w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block p-2" min="0" max="100" required>
+                        </div>
+                        <div class="w-2/3">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Attachments</label>
+                            <div class="flex gap-2">
+                                <label class="cursor-pointer flex-1 flex items-center justify-center p-2 border border-dashed border-gray-300 rounded-lg hover:bg-gray-50 text-xs text-gray-600 transition-colors">
+                                    <i class="fas fa-file-pdf text-red-500 mr-1.5"></i> <span>Add PDF(s)</span>
+                                    <input type="file" class="hidden" accept=".pdf" multiple onchange="handleTopicFilesUpload(this)">
+                                </label>
+                                <label class="cursor-pointer flex-1 flex items-center justify-center p-2 border border-dashed border-gray-300 rounded-lg hover:bg-gray-50 text-xs text-gray-600 transition-colors">
+                                    <i class="fas fa-camera text-blue-500 mr-1.5"></i> <span>Add Media</span>
+                                    <input type="file" class="hidden" accept="image/*,video/*" multiple capture="environment" onchange="handleTopicFilesUpload(this)">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="topic-file-list flex flex-wrap gap-2 mt-1 empty:hidden"></div>
+                </div>
+            `;
+            container.appendChild(row);
+            if (topicData) {
+                row.querySelector('.topic-title').value = topicData.title;
+                row.querySelector('.topic-score').value = topicData.score;
+                row.querySelectorAll('.topic-skill').forEach(cb => { if (topicData.skills.includes(cb.value)) cb.checked = true; });
+                
+                const fileContainer = row.querySelector('.topic-file-list');
+                if (Array.isArray(topicData.files)) {
+                    topicData.files.forEach(file => {
+                        const chip = document.createElement('div');
+                        const isPdf = file.name.toLowerCase().endsWith('.pdf');
+                        chip.className = 'flex items-center gap-2 bg-indigo-50 px-2 py-1.5 rounded border border-indigo-100 text-xs shadow-sm max-w-full';
+                        chip.innerHTML = `
+                            <i class="${isPdf ? 'fas fa-file-pdf text-red-500' : 'fas fa-image text-blue-500'} shrink-0"></i>
+                            <a href="${file.data}" download="${file.name}" target="_blank" class="text-indigo-700 hover:underline truncate max-w-[120px] block" title="${file.name}">${file.name}</a>
+                            <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 shrink-0 ml-1"><i class="fas fa-times"></i></button>
+                        `;
+                        fileContainer.appendChild(chip);
+                    });
+                }
+            }
+        };
+
+        const addHomeworkRow = (hwData = null) => {
+            const container = document.getElementById('homework-container');
+            const row = document.createElement('div');
+            row.className = 'hw-row flex flex-wrap md:flex-nowrap gap-2 items-center bg-gray-50 border border-gray-200 rounded-lg p-2';
+            row.innerHTML = `
+                <input type="text" class="hw-desc flex-1 bg-white border border-gray-300 text-gray-900 text-sm rounded focus:ring-indigo-500 focus:border-indigo-500 p-2" placeholder="Task Description" required>
+                <input type="date" class="hw-deadline w-36 bg-white border border-gray-300 text-gray-900 text-sm rounded focus:ring-indigo-500 focus:border-indigo-500 p-2" required>
+                <label class="cursor-pointer flex items-center justify-center p-2 bg-white border border-dashed border-gray-300 rounded hover:bg-gray-100 text-xs text-gray-600 w-36 shrink-0 file-label-container transition-colors">
+                    <i class="fas fa-images text-blue-500 mr-1 icon-default"></i>
+                    <i class="fas fa-check-circle text-green-500 mr-1 hidden icon-approved"></i>
+                    <span class="file-label-text truncate">Add Photos</span>
+                    <input type="file" class="hidden hw-files" accept="image/*" multiple data-default="Add Photos" onchange="updateHomeworkFileName(this)">
+                </label>
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 p-2 shrink-0"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(row);
+            if(hwData) {
+                row.querySelector('.hw-desc').value = hwData.desc;
+                row.querySelector('.hw-deadline').value = hwData.deadline;
+                if(hwData.fileCount > 0) {
+                    const labelContainer = row.querySelector('.file-label-container');
+                    const labelText = row.querySelector('.file-label-text');
+                    labelText.textContent = hwData.fileCount > 1 ? `Approved (+${hwData.fileCount})` : 'Approved';
+                    labelText.classList.add('text-green-600', 'font-medium');
+                    labelContainer.classList.add('bg-green-50', 'border-green-300');
+                    row.querySelector('.icon-default').classList.add('hidden');
+                    row.querySelector('.icon-approved').classList.remove('hidden');
+                }
+            }
+        };
+
+        const getSessionAvg = (topics) => {
+            if (!topics || topics.length === 0) return 0;
+            return Math.round(topics.reduce((acc, t) => acc + t.score, 0) / topics.length);
+        };
+
+        const renderDashboard = () => {
+            document.getElementById('stat-students').textContent = students.length;
+            document.getElementById('stat-sessions').textContent = sessions.length;
+            let totalScore = 0, totalCount = 0;
+            sessions.forEach(s => s.topics.forEach(t => { totalScore += t.score; totalCount++; }));
+            document.getElementById('stat-avg').textContent = totalCount > 0 ? Math.round(totalScore / totalCount) : 0;
+
+            const recentSessions = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+            const tbody = document.getElementById('dashboard-recent-table');
+            tbody.innerHTML = '';
+            recentSessions.forEach(session => {
+                const student = students.find(s => s.id == session.studentId);
+                const avgScore = getSessionAvg(session.topics);
+                let scoreColor = avgScore < 75 ? 'text-red-600 bg-red-100' : (avgScore < 85 ? 'text-yellow-600 bg-yellow-100' : 'text-green-600 bg-green-100');
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">${formatDate(session.date)}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900">${student ? student.name : 'Unknown'}</td>
+                        <td class="px-6 py-4 truncate max-w-xs">${session.topics.map(t => t.title).join(', ')}</td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${scoreColor}">${avgScore}</span></td>
+                    </tr>
+                `;
+            });
+        };
+
+        const renderStudents = () => {
+            const tbody = document.getElementById('students-table');
+            const empty = document.getElementById('students-empty');
+            if (!tbody || !empty) return;
+            tbody.innerHTML = '';
+
+            const searchCol = document.getElementById('filter-student-col')?.value || 'name';
+            const searchVal = document.getElementById('filter-student-search')?.value.toLowerCase() || '';
+            
+            let filteredStudents = students.filter(s => {
+                if (!searchVal) return true;
+                if (searchCol === 'name') return s.name.toLowerCase().includes(searchVal);
+                if (searchCol === 'age') return s.age.toString().includes(searchVal);
+                if (searchCol === 'level') return s.level.toLowerCase().includes(searchVal);
+                if (searchCol === 'parent') return s.parent.toLowerCase().includes(searchVal);
+                return true;
+            });
+
+            if (filteredStudents.length === 0) {
+                empty.classList.remove('hidden');
+            } else {
+                empty.classList.add('hidden');
+                filteredStudents.forEach(student => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 font-medium text-gray-900">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold mr-3">${student.name.charAt(0)}</div>
+                                    ${student.name}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">${student.age} yrs</td>
+                            <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded border border-blue-100 text-xs font-medium">${student.level}</span></td>
+                            <td class="px-6 py-4">
+                                <p class="text-sm font-medium text-gray-800">${student.parent}</p>
+                                <p class="text-xs text-gray-500"><i class="fab fa-whatsapp text-green-500 mr-1"></i>${student.phone}</p>
+                                ${student.schedules && student.schedules.length > 0 ? `<p class="text-xs text-indigo-500 mt-1"><i class="fas fa-clock mr-1"></i>${student.schedules.length} Schedule(s)</p>` : ''}
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="editStudent('${student.id}')" class="text-blue-500 hover:text-blue-700 mx-1"><i class="fas fa-edit"></i></button>
+                                <button onclick="deleteStudent('${student.id}')" class="text-red-500 hover:text-red-700 mx-1"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            populateStudentSelects();
+        };
+
+        const renderSessions = () => {
+            const tbody = document.getElementById('sessions-table');
+            const empty = document.getElementById('sessions-empty');
+            if (!tbody || !empty) return;
+            tbody.innerHTML = '';
+
+            const searchCol = document.getElementById('filter-session-col')?.value || 'student';
+            const searchVal = document.getElementById('filter-session-search')?.value.toLowerCase() || '';
+
+            let filteredSessions = sessions.filter(s => {
+                if (!searchVal) return true;
+                const student = students.find(st => st.id == s.studentId);
+                if (searchCol === 'student') return student && student.name.toLowerCase().includes(searchVal);
+                if (searchCol === 'date') return s.date.includes(searchVal);
+                if (searchCol === 'status') return s.status.toLowerCase().includes(searchVal);
+                if (searchCol === 'topic') return s.topics.some(t => t.title.toLowerCase().includes(searchVal));
+                return true;
+            });
+
+            if (filteredSessions.length === 0) {
+                empty.classList.remove('hidden');
+            } else {
+                empty.classList.add('hidden');
+                [...filteredSessions].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(session => {
+                    const student = students.find(s => s.id == session.studentId);
+                    const avgScore = getSessionAvg(session.topics);
+                    let scoreColor = avgScore < 75 ? 'text-red-600' : (avgScore < 85 ? 'text-yellow-600' : 'text-green-600');
+                    let statusColor = session.status === 'Online' ? 'bg-cyan-100 text-cyan-800 border-cyan-200' : 'bg-orange-100 text-orange-800 border-orange-200';
+
+                    let topicsSummaryHtml = session.topics.map(t => {
+                        const fileCount = Array.isArray(t.files) ? t.files.length : 0;
+                        return fileCount > 0 ? `${t.title} <span class="text-gray-400 text-[10px] ml-1"><i class="fas fa-paperclip"></i> ${fileCount}</span>` : t.title;
+                    }).join('<br>');
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <p class="text-sm text-gray-900">${formatDate(session.date)}</p>
+                                <p class="text-xs text-gray-500">${session.startTime} - ${session.endTime}</p>
+                            </td>
+                            <td class="px-6 py-4 font-medium text-gray-900">${student ? student.name : 'Deleted Student'}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-medium border ${statusColor}">${session.status}</span></td>
+                            <td class="px-6 py-4 text-sm font-medium">
+                                <div class="max-w-xs truncate">${topicsSummaryHtml}</div>
+                                ${session.homeworks.length > 0 ? `<div class="text-xs text-purple-600 mt-1"><i class="fas fa-tasks mr-1"></i> ${session.homeworks.length} Homework(s)</div>` : ''}
+                            </td>
+                            <td class="px-6 py-4 font-bold ${scoreColor}">${avgScore}</td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="editSession('${session.id}')" class="text-blue-500 hover:text-blue-700 mx-1"><i class="fas fa-edit"></i></button>
+                                <button onclick="deleteSession('${session.id}')" class="text-red-500 hover:text-red-700 mx-1"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        };
+
+        const populateStudentSelects = () => {
+            let options = '<option value="">-- Select Student --</option>';
+            students.forEach(s => options += `<option value="${s.id}">${s.name} (${s.level})</option>`);
+            if(document.getElementById('session-student')) document.getElementById('session-student').innerHTML = options;
+            if(document.getElementById('report-student-select')) document.getElementById('report-student-select').innerHTML = options;
+        };
+
+        const renderSettings = () => {
+            document.getElementById('setting-name').value = courseInfo.name || '';
+            document.getElementById('setting-address').value = courseInfo.address || '';
+            document.getElementById('setting-phone').value = courseInfo.phone || '';
+            document.getElementById('setting-teacher').value = courseInfo.teacher || '';
+            
+            if (courseInfo.logo) {
+                const imgEl = document.getElementById('setting-logo-preview');
+                imgEl.src = getDriveImageUrl(courseInfo.logo);
+                imgEl.dataset.originalUrl = courseInfo.logo; // Simpan url aslinya
+                imgEl.classList.remove('hidden');
+                document.getElementById('setting-logo-icon').classList.add('hidden');
+            } else {
+                const imgEl = document.getElementById('setting-logo-preview');
+                imgEl.src = "";
+                imgEl.dataset.originalUrl = "";
+                imgEl.classList.add('hidden');
+                document.getElementById('setting-logo-icon').classList.remove('hidden');
+            }
+        };
+
+        // ====== FIREBASE & GOOGLE DRIVE OPERATIONS ======
+
+        // Fungsi bantuan untuk upload file ke Google Drive Apps Script
+        const uploadToGoogleDrive = async (base64Data, fileName) => {
+            if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("MASUKKAN_URL")) {
+                throw new Error("Google Apps Script URL belum diatur!");
+            }
+            
+            const mimeType = base64Data.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/)[1];
+            const payload = {
+                name: fileName,
+                mimeType: mimeType,
+                data: base64Data
+            };
+
+            const response = await fetch(GAS_WEB_APP_URL, {
+                method: 'POST',
+                // Kita gunakan text/plain untuk menghindari CORS preflight errors yang rumit di Apps Script
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            if (result.status === 'success') {
+                return result.url;
+            } else {
+                throw new Error(result.message);
+            }
+        };
+
+        const handleSettingsSubmit = async (e) => {
+            e.preventDefault();
+            if(!db) return showToast("Firebase tidak terhubung. Cek konfigurasi Anda.", false);
+
+            const submitBtn = document.getElementById('btn-save-settings');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Menyimpan...';
+            submitBtn.disabled = true;
+            
+            try {
+                let logoData = courseInfo.logo;
+                const imgPreview = document.getElementById('setting-logo-preview');
+                const previewSrc = imgPreview.src;
+                
+                // Jika previewSrc berupa base64, unggah ke Google Drive
+                if (previewSrc.startsWith('data:')) {
+                    const safeFileName = `logo_${Date.now()}.png`; 
+                    logoData = await uploadToGoogleDrive(previewSrc, safeFileName);
+                } else if (imgPreview.classList.contains('hidden')) {
+                    logoData = "";
+                } else {
+                    logoData = courseInfo.logo; // Pertahankan URL asli jika tidak diedit
+                }
+
+                const data = {
+                    name: document.getElementById('setting-name').value.toUpperCase(),
+                    address: document.getElementById('setting-address').value.toUpperCase(),
+                    phone: document.getElementById('setting-phone').value,
+                    teacher: document.getElementById('setting-teacher').value,
+                    logo: logoData
+                };
+
+                await setDoc(getDocRef('settings', 'courseInfo'), data);
+                showToast('Course settings updated successfully');
+            } catch(err) { 
+                console.error(err); 
+                showToast('Error: ' + err.message, false); 
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        };
+
+        const handleStudentSubmit = async (e) => {
+            e.preventDefault();
+            if(!db) return showToast("Firebase tidak terhubung.", false);
+            
+            const id = document.getElementById('student-id').value;
+            const schedulesArray = Array.from(document.querySelectorAll('.schedule-row')).map(row => ({
+                day: row.querySelector('.schedule-day').value, time: row.querySelector('.schedule-time').value
+            }));
+
+            const data = {
+                name: document.getElementById('student-name').value,
+                dob: document.getElementById('student-dob').value,
+                age: parseInt(document.getElementById('student-age').value),
+                level: document.getElementById('student-level').value,
+                parent: document.getElementById('student-parent').value,
+                phone: document.getElementById('student-phone').value,
+                address: document.getElementById('student-address').value,
+                schedules: JSON.stringify(schedulesArray) 
+            };
+
+            try {
+                if (id) {
+                    await updateDoc(getDocRef('students', id), data);
+                    showToast('Student data updated successfully');
+                } else {
+                    await addDoc(getColRef('students'), data);
+                    showToast('New student added successfully');
+                }
+                closeModal('modal-student');
+            } catch(err) { console.error(err); showToast('Error saving data', false); }
+        };
+
+        const deleteStudent = async (id) => {
+            if(!db) return;
+            try {
+                await deleteDoc(getDocRef('students', id));
+                showToast('Student data deleted successfully');
+            } catch(err) { console.error(err); showToast('Error deleting data', false); }
+        };
+
+        const editStudent = (id) => {
+            const student = students.find(s => s.id == id);
+            if(student) {
+                openModal('modal-student');
+                document.getElementById('student-id').value = student.id;
+                document.getElementById('student-name').value = student.name;
+                document.getElementById('student-dob').value = student.dob || '';
+                document.getElementById('student-age').value = student.age;
+                document.getElementById('student-level').value = student.level;
+                document.getElementById('student-parent').value = student.parent;
+                document.getElementById('student-phone').value = student.phone;
+                document.getElementById('student-address').value = student.address || '';
+                
+                const container = document.getElementById('schedule-container');
+                container.innerHTML = '';
+                if (student.schedules && student.schedules.length > 0) {
+                    student.schedules.forEach(sch => addScheduleRow(sch.day, sch.time));
+                } else { addScheduleRow(); }
+                document.getElementById('student-modal-title').textContent = 'Edit Student Data';
+            }
+        };
+
+        const handleSessionSubmit = async (e) => {
+            e.preventDefault();
+            if(!db) return showToast("Firebase tidak terhubung.", false);
+            
+            const id = document.getElementById('session-id').value;
+            const studentId = document.getElementById('session-student').value;
+            if(!studentId) return showToast('Please select a student first', false);
+
+            const submitBtn = document.getElementById('btn-save-session');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengunggah ke Drive...';
+            submitBtn.disabled = true;
+
+            try {
+                const topicsArray = Array.from(document.querySelectorAll('.topic-row')).map(row => {
+                    const files = Array.from(row.querySelectorAll('.topic-file-list > div')).map(chip => {
+                        const a = chip.querySelector('a');
+                        return { name: a.download, data: a.href };
+                    });
+                    return {
+                        title: row.querySelector('.topic-title').value,
+                        skills: Array.from(row.querySelectorAll('.topic-skill:checked')).map(cb => cb.value),
+                        score: parseInt(row.querySelector('.topic-score').value) || 0,
+                        files: files
+                    };
+                });
+
+                if (topicsArray.length === 0) {
+                    showToast('Please add at least one topic', false);
+                    submitBtn.innerHTML = originalText; submitBtn.disabled = false;
+                    return;
+                }
+
+                // Proses Upload File Base64 ke Google Drive
+                for (let i = 0; i < topicsArray.length; i++) {
+                    for (let j = 0; j < topicsArray[i].files.length; j++) {
+                        const f = topicsArray[i].files[j];
+                        // Jika berawalan data:, artinya ini file baru yang perlu diunggah
+                        if (f.data && f.data.startsWith('data:')) {
+                            const safeFileName = f.name.replace(/[^a-zA-Z0-9.]/g, '_');
+                            // Panggil fungsi upload Google Drive
+                            const driveUrl = await uploadToGoogleDrive(f.data, `${Date.now()}_${safeFileName}`);
+                            topicsArray[i].files[j].data = driveUrl; // Ganti Base64 dengan Google Drive URL
+                        }
+                    }
+                }
+
+                const homeworksArray = Array.from(document.querySelectorAll('.hw-row')).map(row => {
+                    let fileCount = row.querySelector('.hw-files') && row.querySelector('.hw-files').files.length ? row.querySelector('.hw-files').files.length : 0;
+                    const labelText = row.querySelector('.file-label-text').textContent;
+                    if (labelText.includes('Approved')) {
+                        const match = labelText.match(/\+\d+/);
+                        fileCount = match ? parseInt(match[0].replace('+','')) : 1;
+                    }
+                    return { desc: row.querySelector('.hw-desc').value, deadline: row.querySelector('.hw-deadline').value, fileCount };
+                });
+
+                const data = {
+                    studentId, 
+                    topics: JSON.stringify(topicsArray), 
+                    homeworks: JSON.stringify(homeworksArray),
+                    status: document.getElementById('session-status').value,
+                    date: document.getElementById('session-date').value,
+                    startTime: document.getElementById('session-start').value,
+                    endTime: document.getElementById('session-end').value,
+                    notes: document.getElementById('session-notes').value
+                };
+
+                if (id) {
+                    await updateDoc(getDocRef('sessions', id), data);
+                    showToast('Learning journal updated successfully');
+                } else {
+                    await addDoc(getColRef('sessions'), data);
+                    showToast('Learning journal saved successfully');
+                }
+                closeModal('modal-session');
+
+            } catch(err) { 
+                console.error(err); 
+                showToast('Error saving data: ' + err.message, false); 
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        };
+
+        const deleteSession = async (id) => {
+            if(!db) return;
+            try {
+                await deleteDoc(getDocRef('sessions', id));
+                showToast('Learning journal deleted successfully');
+            } catch(err) { console.error(err); showToast('Error deleting data', false); }
+        };
+
+        const editSession = (id) => {
+            const session = sessions.find(s => s.id == id);
+            if(session) {
+                openModal('modal-session');
+                document.getElementById('session-id').value = session.id;
+                document.getElementById('session-student').value = session.studentId;
+                document.getElementById('session-status').value = session.status;
+                document.getElementById('session-date').value = session.date;
+                document.getElementById('session-start').value = session.startTime;
+                document.getElementById('session-end').value = session.endTime;
+                document.getElementById('session-notes').value = session.notes || '';
+                
+                const topicsContainer = document.getElementById('topics-container');
+                topicsContainer.innerHTML = '';
+                session.topics.forEach(t => addTopicRow(t));
+                
+                const hwContainer = document.getElementById('homework-container');
+                hwContainer.innerHTML = '';
+                if(session.homeworks) session.homeworks.forEach(h => addHomeworkRow(h));
+                document.getElementById('session-modal-title').textContent = 'Edit Learning Journal';
+            }
+        };
+
+        const generateReport = () => {
+            const studentId = document.getElementById('report-student-select').value;
+            const monthYear = document.getElementById('report-month-select').value;
+            const container = document.getElementById('report-container');
+            const emptyState = document.getElementById('report-empty-state');
+
+            if (!studentId || !monthYear) {
+                showToast('Please select both a student and a month/year period', false);
+                container.classList.add('hidden'); emptyState.classList.add('hidden');
+                return;
+            }
+
+            const [selYear, selMonth] = monthYear.split('-');
+            const student = students.find(s => s.id == studentId);
+            
+            const studentSessions = sessions.filter(s => {
+                if (s.studentId != studentId) return false;
+                const d = new Date(s.date);
+                return String(d.getMonth() + 1).padStart(2, '0') === selMonth && String(d.getFullYear()) === selYear;
+            }).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (studentSessions.length === 0) {
+                container.classList.add('hidden'); emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            document.getElementById('report-course-name').textContent = courseInfo.name || 'AGAPE ENGLISH COURSE';
+            document.getElementById('report-course-address').textContent = courseInfo.address || '';
+            document.getElementById('report-course-phone').textContent = `Phone: ${courseInfo.phone || ''}`;
+            document.getElementById('report-teacher-name').textContent = courseInfo.teacher || 'Teacher';
+            
+            const logoEl = document.getElementById('report-course-logo');
+            if (courseInfo.logo) { 
+                logoEl.src = getDriveImageUrl(courseInfo.logo); 
+                logoEl.classList.remove('hidden'); 
+            } 
+            else { 
+                logoEl.classList.add('hidden'); 
+                logoEl.src = ""; 
+            }
+
+            document.getElementById('report-print-date').textContent = formatDate(new Date()) + ` (Period: ${selMonth}/${selYear})`;
+            document.getElementById('report-name').textContent = student.name;
+            document.getElementById('report-age').textContent = student.age;
+            document.getElementById('report-level').textContent = student.level;
+            document.getElementById('report-parent').textContent = student.parent;
+            document.getElementById('report-parent-sign').textContent = student.parent;
+
+            document.getElementById('report-total-sessions').textContent = studentSessions.length;
+            let totalScoreAcc = 0;
+            studentSessions.forEach(s => totalScoreAcc += getSessionAvg(s.topics));
+            document.getElementById('report-avg-score').textContent = Math.round(totalScoreAcc / studentSessions.length);
+
+            const tbody = document.getElementById('report-table-body');
+            tbody.innerHTML = '';
+            studentSessions.forEach(session => {
+                const avgScore = getSessionAvg(session.topics);
+                
+                let topicsHtml = '<div class="space-y-2">';
+                session.topics.forEach(t => {
+                    let imagesHtml = '';
+                    if (t.files && t.files.length > 0) {
+                        const imageFiles = t.files.filter(f => !f.name.toLowerCase().endsWith('.pdf'));
+                        if (imageFiles.length > 0) {
+                            imagesHtml = '<div class="flex flex-wrap gap-2 mt-2">';
+                            imageFiles.forEach(img => {
+                                const imgSrc = getDriveImageUrl(img.data);
+                                imagesHtml += `<a href="${img.data}" target="_blank"><img src="${imgSrc}" class="h-16 w-auto rounded border border-gray-200 object-cover shadow-sm" alt="Activity Proof"></a>`;
+                            });
+                            imagesHtml += '</div>';
+                        }
+                    }
+
+                    topicsHtml += `
+                        <div class="flex flex-col border-b border-dashed border-gray-200 pb-3 mt-2 first:mt-0 last:border-0 last:pb-0 break-inside-avoid">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="font-medium text-gray-800 block">${t.title}</span> 
+                                    <span class="text-xs text-gray-500">${t.skills.join(', ')}</span>
+                                </div>
+                                <div class="text-right ml-4 shrink-0">
+                                    <span class="text-[10px] text-gray-400 uppercase tracking-wider block leading-none mb-1">Score</span>
+                                    <span class="font-bold text-indigo-600 text-sm leading-none">${t.score}</span>
+                                </div>
+                            </div>
+                            ${imagesHtml}
+                        </div>
+                    `;
+                });
+                topicsHtml += '</div>';
+                
+                let notesHtml = session.notes ? `<div class="mt-3 text-xs text-gray-600 bg-gray-50 p-2 rounded italic border border-gray-100">" ${session.notes} "</div>` : '';
+
+                tbody.innerHTML += `
+                    <tr class="border-b border-gray-200">
+                        <td class="border border-gray-200 px-4 py-3 align-top">
+                            <p class="font-medium text-gray-900">${formatDate(session.date)}</p>
+                            <p class="text-xs text-gray-500 mt-1">${session.status} • ${session.startTime} - ${session.endTime}</p>
+                        </td>
+                        <td class="border border-gray-200 px-4 py-3 align-top">${topicsHtml}${notesHtml}</td>
+                        <td class="border border-gray-200 px-4 py-3 font-bold text-center text-lg align-middle text-indigo-700">${avgScore}</td>
+                    </tr>
+                `;
+            });
+        };
+
+        // Firebase Listeners & Initialization
+        const setupListeners = () => {
+            onSnapshot(getColRef('students'), (snapshot) => {
+                students = []; 
+                snapshot.forEach(doc => {
+                    let d = doc.data();
+                    if(typeof d.schedules === 'string') d.schedules = JSON.parse(d.schedules);
+                    students.push({ id: doc.id, ...d });
+                });
+                renderStudents(); if(!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboard();
+            }, (err) => console.error(err));
+
+            onSnapshot(getColRef('sessions'), (snapshot) => {
+                sessions = []; 
+                snapshot.forEach(doc => {
+                    let d = doc.data();
+                    if(typeof d.topics === 'string') d.topics = JSON.parse(d.topics);
+                    if(typeof d.homeworks === 'string') d.homeworks = JSON.parse(d.homeworks);
+                    sessions.push({ id: doc.id, ...d });
+                });
+                renderSessions(); if(!document.getElementById('view-dashboard').classList.contains('hidden')) renderDashboard();
+            }, (err) => console.error(err));
+
+            onSnapshot(getDocRef('settings', 'courseInfo'), (docSnap) => {
+                if (docSnap.exists()) courseInfo = docSnap.data();
+                if(!document.getElementById('view-settings').classList.contains('hidden')) renderSettings();
+            }, (err) => console.error(err));
+        };
+
+        const initApp = async () => {
+            if(!db) return;
+            if (isPreview) {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
+                    else await signInAnonymously(auth);
+                } catch(e) { console.error("Auth error", e); }
+            }
+            onAuthStateChanged(auth, (user) => {
+                if (user || !isPreview) { currentUser = user; setupListeners(); }
+            });
+            if (!isPreview) setupListeners();
+            navigate('dashboard');
+        };
+
+        // Expose functions to window (dikarenakan tipe script adalah module)
+        window.toggleMobileMenu = toggleMobileMenu; window.openModal = openModal; window.closeModal = closeModal;
+        window.navigate = navigate; window.renderStudents = renderStudents; window.renderSessions = renderSessions;
+        window.generateReport = generateReport; window.handleSettingsSubmit = handleSettingsSubmit;
+        window.handleStudentSubmit = handleStudentSubmit; window.handleSessionSubmit = handleSessionSubmit;
+        window.editStudent = editStudent; window.deleteStudent = deleteStudent; window.editSession = editSession;
+        window.deleteSession = deleteSession; window.handleLogoUpload = handleLogoUpload; window.removeLogo = removeLogo;
+        window.formatTitleCase = formatTitleCase; window.calculateAge = calculateAge; window.formatPhone = formatPhone;
+        window.addScheduleRow = addScheduleRow; window.addTopicRow = addTopicRow; window.addHomeworkRow = addHomeworkRow;
+        window.handleTopicFilesUpload = handleTopicFilesUpload; window.updateHomeworkFileName = updateHomeworkFileName;
+
+        initApp();
+    </script>
+</body>
+</html>
