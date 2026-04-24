@@ -34,7 +34,6 @@
 </head>
 <body class="text-gray-800 flex h-screen overflow-hidden">
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed top-5 right-5 transform translate-x-full transition-transform duration-300 z-50 flex items-center p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
         <div id="toast-icon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg">
             <i class="fas fa-check"></i>
@@ -42,7 +41,6 @@
         <div id="toast-message" class="ml-3 text-sm font-normal">Message here.</div>
     </div>
 
-    <!-- Sidebar -->
     <aside class="w-64 bg-indigo-900 text-white flex flex-col h-full no-print shadow-xl z-20 hidden md:flex absolute md:relative">
         <div class="p-6 flex items-center justify-center border-b border-indigo-800">
             <i class="fas fa-book-open text-3xl text-indigo-300 mr-3"></i>
@@ -73,7 +71,6 @@
         </div>
     </aside>
 
-    <!-- Mobile Header -->
     <div class="md:hidden fixed top-0 w-full bg-indigo-900 text-white p-4 flex justify-between items-center z-30 no-print">
         <div class="flex items-center">
             <i class="fas fa-book-open text-xl text-indigo-300 mr-2"></i>
@@ -84,7 +81,6 @@
         </button>
     </div>
 
-    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-indigo-900 bg-opacity-95 z-40 hidden flex-col pt-20 px-6 no-print transition-opacity">
         <button onclick="toggleMobileMenu()" class="absolute top-5 right-5 text-white text-3xl">&times;</button>
         <button onclick="navigate('dashboard'); toggleMobileMenu()" class="w-full flex items-center px-4 py-4 text-lg text-white border-b border-indigo-800">
@@ -104,10 +100,8 @@
         </button>
     </div>
 
-    <!-- Main Content -->
     <main id="main-content" class="flex-1 flex flex-col h-full relative overflow-y-auto w-full pt-16 md:pt-0">
         
-        <!-- View: Dashboard -->
         <section id="view-dashboard" class="p-6 md:p-10 w-full max-w-6xl mx-auto">
             <div class="mb-8 flex justify-between items-end">
                 <div>
@@ -116,7 +110,6 @@
                 </div>
             </div>
 
-            <!-- Stats -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 flex items-center">
                     <div class="p-4 rounded-full bg-blue-100 text-blue-600 mr-4">
@@ -147,7 +140,6 @@
                 </div>
             </div>
 
-            <!-- Recent Activity -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                     <h3 class="font-semibold text-gray-800">Recent Learning Journals</h3>
@@ -164,14 +156,12 @@
                             </tr>
                         </thead>
                         <tbody id="dashboard-recent-table" class="divide-y divide-gray-100">
-                            <!-- Dynamic Content -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
         </section>
 
-        <!-- View: Students -->
         <section id="view-students" class="p-6 md:p-10 hidden w-full max-w-6xl mx-auto">
             <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
@@ -183,7 +173,6 @@
                 </button>
             </div>
 
-            <!-- Advanced Filters (Students) -->
             <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <label class="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Search Students By Category</label>
                 <div class="flex flex-col md:flex-row gap-0">
@@ -213,8 +202,7 @@
                             </tr>
                         </thead>
                         <tbody id="students-table" class="divide-y divide-gray-100 text-gray-700">
-                            <!-- Dynamic Content -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
                 <div id="students-empty" class="hidden p-10 text-center text-gray-500">
@@ -224,7 +212,6 @@
             </div>
         </section>
 
-        <!-- View: Sessions (Jurnal) -->
         <section id="view-sessions" class="p-6 md:p-10 hidden w-full max-w-6xl mx-auto">
             <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
@@ -236,7 +223,6 @@
                 </button>
             </div>
 
-            <!-- Advanced Filters (Sessions) -->
             <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <label class="block text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Search Records By Category</label>
                 <div class="flex flex-col md:flex-row gap-0">
@@ -267,8 +253,7 @@
                             </tr>
                         </thead>
                         <tbody id="sessions-table" class="divide-y divide-gray-100 text-gray-700">
-                            <!-- Dynamic Content -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
                 <div id="sessions-empty" class="hidden p-10 text-center text-gray-500">
@@ -278,7 +263,6 @@
             </div>
         </section>
 
-        <!-- View: Reports -->
         <section id="view-reports" class="p-6 md:p-10 hidden w-full max-w-4xl mx-auto">
             <div class="mb-8 no-print">
                 <h2 class="text-3xl font-bold text-gray-800 mb-1">Learning Progress Report</h2>
@@ -298,10 +282,8 @@
                 </div>
             </div>
 
-            <!-- Printable Report Container -->
             <div id="report-container" class="hidden bg-white rounded-xl shadow-md p-8 md:p-12 border border-gray-200 print:shadow-none print:border-none print:p-0">
                 
-                <!-- Report Header -->
                 <div class="border-b-2 border-indigo-900 pb-6 mb-8 flex flex-col md:flex-row print:flex-row justify-between items-center gap-4">
                     <div class="text-center md:text-left print:text-left flex flex-col md:flex-row print:flex-row items-center gap-4">
                         <img id="report-course-logo" src="" class="hidden w-16 h-16 object-contain">
@@ -317,7 +299,6 @@
                     </div>
                 </div>
 
-                <!-- Student Info -->
                 <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
                     <div>
                         <p><span class="font-semibold w-28 inline-block text-gray-600">Student Name</span> : <span id="report-name" class="font-medium text-gray-900"></span></p>
@@ -329,7 +310,6 @@
                     </div>
                 </div>
 
-                <!-- Summary Stats -->
                 <div class="bg-indigo-50 rounded-lg p-4 mb-8 flex justify-around text-center">
                     <div>
                         <p class="text-xs text-indigo-600 font-semibold uppercase tracking-wider mb-1">Total Meetings</p>
@@ -341,7 +321,6 @@
                     </div>
                 </div>
 
-                <!-- Sessions List -->
                 <div class="mb-8">
                     <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Learning Details</h3>
                     <table class="w-full text-left text-sm border-collapse">
@@ -353,20 +332,24 @@
                             </tr>
                         </thead>
                         <tbody id="report-table-body">
-                            <!-- Dynamic -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
 
-                <!-- Signatures -->
-                <div class="mt-16 flex justify-between px-10 text-center text-sm">
-                    <div>
-                        <p class="mb-16 text-gray-600">Acknowledged by Guardian</p>
-                        <p class="border-t border-gray-400 w-48 pt-2 font-medium mx-auto" id="report-parent-sign"></p>
+                <div class="mt-10 flex justify-between px-10 text-center text-sm">
+                    <div class="flex flex-col items-center">
+                        <p class="mb-2 text-gray-600">Acknowledged by Guardian</p>
+                        <div class="h-16 w-32 flex items-center justify-center mb-2">
+                            <img id="report-guardian-sig" src="" class="hidden max-w-full max-h-full object-contain">
+                        </div>
+                        <p class="border-t border-gray-400 w-48 pt-2 font-medium" id="report-parent-sign"></p>
                     </div>
-                    <div>
-                        <p class="mb-16 text-gray-600">Agape Instructor</p>
-                        <p id="report-teacher-name" class="border-t border-gray-400 w-48 pt-2 font-medium mx-auto">Teacher / Tutor</p>
+                    <div class="flex flex-col items-center">
+                        <p class="mb-2 text-gray-600">Agape Instructor</p>
+                        <div class="h-16 w-32 flex items-center justify-center mb-2">
+                            <img id="report-teacher-sig" src="" class="hidden max-w-full max-h-full object-contain">
+                        </div>
+                        <p id="report-teacher-name" class="border-t border-gray-400 w-48 pt-2 font-medium">Teacher / Tutor</p>
                     </div>
                 </div>
 
@@ -383,7 +366,6 @@
             </div>
         </section>
 
-        <!-- View: Settings -->
         <section id="view-settings" class="p-6 md:p-10 hidden w-full max-w-4xl mx-auto">
             <div class="mb-8">
                 <h2 class="text-3xl font-bold text-gray-800 mb-1">Course Settings</h2>
@@ -425,6 +407,18 @@
                                 <input type="text" id="setting-teacher" oninput="formatTitleCase(this)" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
                             </div>
                         </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-gray-100">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Digital Signature (Instructor)</label>
+                            <p class="text-xs text-gray-500 mb-2">Draw your signature below. This will be embedded in all generated PDF reports.</p>
+                            <div class="border border-gray-300 rounded-lg overflow-hidden bg-white w-full max-w-sm">
+                                <canvas id="setting-signature-pad" width="400" height="150" class="w-full bg-white touch-none cursor-crosshair"></canvas>
+                                <div class="bg-gray-50 border-t border-gray-300 p-2 text-right">
+                                    <button type="button" id="btn-clear-setting-sig" class="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1"><i class="fas fa-eraser mr-1"></i> Clear Signature</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="mt-8 pt-5 border-t border-gray-100 flex justify-end">
                         <button type="submit" id="btn-save-settings" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg shadow-sm transition-colors font-medium">
@@ -437,7 +431,6 @@
 
     </main>
 
-    <!-- Modal: Add Student -->
     <div id="modal-student" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden transform transition-all">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
@@ -448,7 +441,7 @@
             </div>
             <form id="form-student" onsubmit="handleStudentSubmit(event)" class="p-6">
                 <input type="hidden" id="student-id">
-                <div class="space-y-4 max-h-[60vh] overflow-y-auto px-1 -mx-1">
+                <div class="space-y-4 max-h-[60vh] overflow-y-auto px-1 -mx-1 pb-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <input type="text" id="student-name" oninput="formatTitleCase(this)" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="e.g. Budi Santoso">
@@ -495,7 +488,16 @@
                             </button>
                         </div>
                         <div id="schedule-container" class="space-y-2">
-                            <!-- Dynamic Schedules Here -->
+                            </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-200">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Guardian Signature</label>
+                        <div class="border border-gray-300 rounded-lg overflow-hidden bg-white w-full">
+                            <canvas id="student-signature-pad" width="400" height="150" class="w-full bg-white touch-none cursor-crosshair"></canvas>
+                            <div class="bg-gray-50 border-t border-gray-300 p-2 text-right">
+                                <button type="button" id="btn-clear-student-sig" class="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1"><i class="fas fa-eraser mr-1"></i> Clear Signature</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -507,7 +509,6 @@
         </div>
     </div>
 
-    <!-- Modal: Add Session -->
     <div id="modal-session" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl overflow-hidden transform transition-all">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
@@ -520,13 +521,11 @@
                 <input type="hidden" id="session-id">
                 <div class="space-y-6 max-h-[70vh] overflow-y-auto px-2 -mx-2">
                     
-                    <!-- Basic Info -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Student Name</label>
                             <select id="session-student" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5">
-                                <!-- Dynamic -->
-                            </select>
+                                </select>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -551,7 +550,6 @@
                         </div>
                     </div>
 
-                    <!-- Material & Evaluation -->
                     <div>
                         <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200">
                             <h4 class="font-semibold text-gray-800">Material & Evaluation</h4>
@@ -560,11 +558,9 @@
                             </button>
                         </div>
                         <div id="topics-container" class="space-y-4">
-                            <!-- Dynamic Topics Here -->
-                        </div>
+                            </div>
                     </div>
 
-                    <!-- Homework (Optional) -->
                     <div>
                         <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200">
                             <h4 class="font-semibold text-gray-800">Homework & Deadline <span class="text-gray-400 font-normal text-sm">(Optional)</span></h4>
@@ -573,11 +569,9 @@
                             </button>
                         </div>
                         <div id="homework-container" class="space-y-3">
-                            <!-- Dynamic Homework Here -->
-                        </div>
+                            </div>
                     </div>
 
-                    <!-- Special Notes -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Special Notes <span class="text-gray-400 font-normal">(Optional)</span></label>
                         <textarea id="session-notes" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" placeholder="Evaluate behavior, shortcomings, or specific progress here..."></textarea>
@@ -592,7 +586,6 @@
         </div>
     </div>
 
-    <!-- Script Logic for Firebase Database & Google Apps Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -614,8 +607,7 @@
         };
         
         // ====== SETTING GOOGLE APPS SCRIPT URL ======
-        // Masukkan URL Google Apps Script yang Anda dapatkan di Langkah 3 di sini:
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzq_33sT6joySqkMgcaaBSeo2_wtHZ3r6Lf7cL09-04FNH4tC3jKe-2cLeeNVMylNJ1Iw/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxniq-StIH08SrI6VGZUVnNtaJOplzAJtDP5Q2x258RiLy_ZTgvEGaN1N-F8qeS2CCQ/exec";
         // =========================================================================
 
         const firebaseConfig = isPreview ? JSON.parse(__firebase_config) : myFirebaseConfig;
@@ -635,16 +627,76 @@
         // State Management Lokal UI
         let students = [];
         let sessions = [];
-        let courseInfo = { name: "AGAPE ENGLISH COURSE", address: "", phone: "", teacher: "", logo: "" };
+        let courseInfo = { name: "AGAPE ENGLISH COURSE", address: "", phone: "", teacher: "", logo: "", signature: "" };
+        let studentPad, instructorPad;
 
-        // Helper Referensi Database (Menyesuaikan dengan Lingkungan)
+        // Helper Referensi Database
         const getColRef = (colName) => {
             if (isPreview && currentUser) return collection(db, 'artifacts', appId, 'users', currentUser.uid, colName);
-            return collection(db, colName); // Ini dipakai di Netlify/Hostinger Anda
+            return collection(db, colName);
         };
         const getDocRef = (colName, docId) => {
             if (isPreview && currentUser) return doc(db, 'artifacts', appId, 'users', currentUser.uid, colName, docId);
-            return doc(db, colName, docId); // Ini dipakai di Netlify/Hostinger Anda
+            return doc(db, colName, docId);
+        };
+
+        // Signature Pad Class
+        const createPad = (canvasId, clearBtnId) => {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            let isDrawing = false;
+            let hasDrawn = false;
+            
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#1e1b4b'; // Warna tinta biru gelap
+            
+            const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+            };
+
+            const start = (e) => {
+                isDrawing = true; hasDrawn = true;
+                const pos = getPos(e);
+                ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+                if(e.type === 'touchstart') e.preventDefault();
+            };
+
+            const draw = (e) => {
+                if (!isDrawing) return;
+                const pos = getPos(e);
+                ctx.lineTo(pos.x, pos.y); ctx.stroke();
+                if(e.type === 'touchmove') e.preventDefault();
+            };
+
+            const stop = () => isDrawing = false;
+
+            canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stop); canvas.addEventListener('mouseout', stop);
+            canvas.addEventListener('touchstart', start, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stop);
+
+            document.getElementById(clearBtnId).addEventListener('click', () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                hasDrawn = false;
+            });
+
+            return {
+                clear: () => { ctx.clearRect(0, 0, canvas.width, canvas.height); hasDrawn = false; },
+                getData: () => hasDrawn ? canvas.toDataURL('image/png') : "",
+                setData: (dataUrl) => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    hasDrawn = false;
+                    if(!dataUrl) return;
+                    const img = new Image();
+                    img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); hasDrawn = true; };
+                    img.src = dataUrl;
+                }
+            };
         };
 
         // UI Helpers
@@ -687,6 +739,7 @@
                 document.getElementById('student-age').value = '';
                 document.getElementById('schedule-container').innerHTML = '';
                 addScheduleRow(); 
+                if(studentPad) studentPad.clear();
                 document.getElementById('student-modal-title').textContent = 'Add New Student';
             }
         };
@@ -745,22 +798,16 @@
             input.value = formatted;
         };
 
-        // Dapatkan Image URL Langsung dari Google Drive
+        // Dapatkan Image URL Langsung dari Google Drive via Thumbnail API (Aman untuk <img>)
         const getDriveImageUrl = (url) => {
             if (!url) return '';
             if (url.startsWith('data:')) return url;
-            
             let id = '';
             const matchD = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
             const matchId = url.match(/id=([a-zA-Z0-9_-]+)/);
-            
             if (matchD && matchD[1]) id = matchD[1];
             else if (matchId && matchId[1]) id = matchId[1];
-
-            if (id) {
-                // Menggunakan Google Drive Thumbnail API agar tidak terblokir oleh aturan Third-Party Cookie browser modern
-                return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
-            }
+            if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w800`;
             return url;
         };
 
@@ -769,10 +816,8 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    const imgEl = document.getElementById('setting-logo-preview');
-                    imgEl.src = event.target.result;
-                    imgEl.dataset.originalUrl = event.target.result; // Simpan data url aslinya
-                    imgEl.classList.remove('hidden');
+                    document.getElementById('setting-logo-preview').src = event.target.result;
+                    document.getElementById('setting-logo-preview').classList.remove('hidden');
                     document.getElementById('setting-logo-icon').classList.add('hidden');
                 };
                 reader.readAsDataURL(file);
@@ -1098,10 +1143,12 @@
             document.getElementById('setting-phone').value = courseInfo.phone || '';
             document.getElementById('setting-teacher').value = courseInfo.teacher || '';
             
+            if (instructorPad) instructorPad.setData(courseInfo.signature || "");
+
             if (courseInfo.logo) {
                 const imgEl = document.getElementById('setting-logo-preview');
                 imgEl.src = getDriveImageUrl(courseInfo.logo);
-                imgEl.dataset.originalUrl = courseInfo.logo; // Simpan url aslinya
+                imgEl.dataset.originalUrl = courseInfo.logo; 
                 imgEl.classList.remove('hidden');
                 document.getElementById('setting-logo-icon').classList.add('hidden');
             } else {
@@ -1115,7 +1162,6 @@
 
         // ====== FIREBASE & GOOGLE DRIVE OPERATIONS ======
 
-        // Fungsi bantuan untuk upload file ke Google Drive Apps Script
         const uploadToGoogleDrive = async (base64Data, fileName) => {
             if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("MASUKKAN_URL")) {
                 throw new Error("Google Apps Script URL belum diatur!");
@@ -1130,7 +1176,6 @@
 
             const response = await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
-                // Kita gunakan text/plain untuk menghindari CORS preflight errors yang rumit di Apps Script
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             });
@@ -1157,14 +1202,13 @@
                 const imgPreview = document.getElementById('setting-logo-preview');
                 const previewSrc = imgPreview.src;
                 
-                // Jika previewSrc berupa base64, unggah ke Google Drive
                 if (previewSrc.startsWith('data:')) {
                     const safeFileName = `logo_${Date.now()}.png`; 
                     logoData = await uploadToGoogleDrive(previewSrc, safeFileName);
                 } else if (imgPreview.classList.contains('hidden')) {
                     logoData = "";
                 } else {
-                    logoData = courseInfo.logo; // Pertahankan URL asli jika tidak diedit
+                    logoData = courseInfo.logo; 
                 }
 
                 const data = {
@@ -1172,7 +1216,8 @@
                     address: document.getElementById('setting-address').value.toUpperCase(),
                     phone: document.getElementById('setting-phone').value,
                     teacher: document.getElementById('setting-teacher').value,
-                    logo: logoData
+                    logo: logoData,
+                    signature: instructorPad.getData()
                 };
 
                 await setDoc(getDocRef('settings', 'courseInfo'), data);
@@ -1203,7 +1248,8 @@
                 parent: document.getElementById('student-parent').value,
                 phone: document.getElementById('student-phone').value,
                 address: document.getElementById('student-address').value,
-                schedules: JSON.stringify(schedulesArray) 
+                schedules: JSON.stringify(schedulesArray),
+                signature: studentPad.getData()
             };
 
             try {
@@ -1244,6 +1290,9 @@
                 if (student.schedules && student.schedules.length > 0) {
                     student.schedules.forEach(sch => addScheduleRow(sch.day, sch.time));
                 } else { addScheduleRow(); }
+
+                if (studentPad) studentPad.setData(student.signature || "");
+
                 document.getElementById('student-modal-title').textContent = 'Edit Student Data';
             }
         };
@@ -1281,16 +1330,13 @@
                     return;
                 }
 
-                // Proses Upload File Base64 ke Google Drive
                 for (let i = 0; i < topicsArray.length; i++) {
                     for (let j = 0; j < topicsArray[i].files.length; j++) {
                         const f = topicsArray[i].files[j];
-                        // Jika berawalan data:, artinya ini file baru yang perlu diunggah
                         if (f.data && f.data.startsWith('data:')) {
                             const safeFileName = f.name.replace(/[^a-zA-Z0-9.]/g, '_');
-                            // Panggil fungsi upload Google Drive
                             const driveUrl = await uploadToGoogleDrive(f.data, `${Date.now()}_${safeFileName}`);
-                            topicsArray[i].files[j].data = driveUrl; // Ganti Base64 dengan Google Drive URL
+                            topicsArray[i].files[j].data = driveUrl; 
                         }
                     }
                 }
@@ -1403,10 +1449,25 @@
             if (courseInfo.logo) { 
                 logoEl.src = getDriveImageUrl(courseInfo.logo); 
                 logoEl.classList.remove('hidden'); 
-            } 
-            else { 
-                logoEl.classList.add('hidden'); 
-                logoEl.src = ""; 
+            } else { 
+                logoEl.classList.add('hidden'); logoEl.src = ""; 
+            }
+
+            // Memasukkan gambar Tanda Tangan ke dalam Report
+            const guardianSigEl = document.getElementById('report-guardian-sig');
+            if (student.signature) {
+                guardianSigEl.src = student.signature;
+                guardianSigEl.classList.remove('hidden');
+            } else {
+                guardianSigEl.classList.add('hidden'); guardianSigEl.src = "";
+            }
+
+            const teacherSigEl = document.getElementById('report-teacher-sig');
+            if (courseInfo.signature) {
+                teacherSigEl.src = courseInfo.signature;
+                teacherSigEl.classList.remove('hidden');
+            } else {
+                teacherSigEl.classList.add('hidden'); teacherSigEl.src = "";
             }
 
             document.getElementById('report-print-date').textContent = formatDate(new Date()) + ` (Period: ${selMonth}/${selYear})`;
@@ -1515,10 +1576,14 @@
                 if (user || !isPreview) { currentUser = user; setupListeners(); }
             });
             if (!isPreview) setupListeners();
+            
+            // Inisialisasi Canvas Tanda Tangan
+            studentPad = createPad('student-signature-pad', 'btn-clear-student-sig');
+            instructorPad = createPad('setting-signature-pad', 'btn-clear-setting-sig');
+
             navigate('dashboard');
         };
 
-        // Expose functions to window (dikarenakan tipe script adalah module)
         window.toggleMobileMenu = toggleMobileMenu; window.openModal = openModal; window.closeModal = closeModal;
         window.navigate = navigate; window.renderStudents = renderStudents; window.renderSessions = renderSessions;
         window.generateReport = generateReport; window.handleSettingsSubmit = handleSettingsSubmit;
@@ -1529,7 +1594,8 @@
         window.addScheduleRow = addScheduleRow; window.addTopicRow = addTopicRow; window.addHomeworkRow = addHomeworkRow;
         window.handleTopicFilesUpload = handleTopicFilesUpload; window.updateHomeworkFileName = updateHomeworkFileName;
 
-        initApp();
+        // Inisialisasi app dipanggil ketika DOM dan module sudah siap
+        document.addEventListener("DOMContentLoaded", initApp);
     </script>
 </body>
 </html>
